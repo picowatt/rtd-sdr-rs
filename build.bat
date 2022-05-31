@@ -1,0 +1,1 @@
+Get-Content Dockerfile | docker build . -t librtlsdr:latest
