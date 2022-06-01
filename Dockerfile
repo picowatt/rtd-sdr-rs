@@ -1,4 +1,4 @@
-FROM rust:1.61-slim-buster AS build_stage
+FROM rust:1.61-slim-buster
 
 WORKDIR /tmp
 
@@ -31,12 +31,10 @@ RUN wget https://github.com/steve-m/librtlsdr/archive/refs/heads/master.zip && \
 # ARG HEADER_FILEPATH=$(find `pwd -P` -name *rtl-sdr.h)
 
 COPY librtlsdr-rs /tmp/librtlsdr-rs
-# WORKDIR /tmp/librtlsdr-rs
 
-RUN LIB_PATH=$(find `pwd -P` -name *.so | grep -oP '\K.+(?=\/)') && \
-    HEADER_FILEPATH=$(find `pwd -P` -name *rtl-sdr.h) && \
+CMD export LIB_PATH=$(find `pwd -P` -name *.so | grep -oP '\K.+(?=\/)') && \
+    export INC_PATH=$(find `pwd -P` -name *rtl-sdr.h | grep -oP '\K.+(?=\/)') && \
+    export HEADER_FILEPATH=$(find `pwd -P` -name *rtl-sdr.h) && \
     cd /tmp/librtlsdr-rs && \
-    cargo build
-
-# FROM build_stage AS export_stage
-# COPY /tmp/librtlsdr-rs librtlsdr-rs
+    cargo clean && \
+    CARGO_HTTP_MULTIPLEXING=false cargo build --release
