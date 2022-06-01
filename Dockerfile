@@ -37,4 +37,5 @@ CMD export LIB_PATH=$(find `pwd -P` -name *.so | grep -oP '\K.+(?=\/)') && \
     export HEADER_FILEPATH=$(find `pwd -P` -name *rtl-sdr.h) && \
     cd /tmp/librtlsdr-rs && \
     cargo clean && \
+    rustup component add rustfmt && \
     CARGO_HTTP_MULTIPLEXING=false cargo build --release
